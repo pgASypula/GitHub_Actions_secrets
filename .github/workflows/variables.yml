@@ -22,6 +22,9 @@ jobs:
         env:
           COLOR: ${{steps.color-selector.outputs.COLOR}}
         run: echo "The selected color is $COLOR"
+      - name: Get color differently
+        run: |
+          echo "Another color $NAME_COL"
 
         
   producer:
