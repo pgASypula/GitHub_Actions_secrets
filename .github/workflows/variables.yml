@@ -1,0 +1,72 @@
+# This is a basic workflow to help you get started with Actions
+
+name: passing job values
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+jobs:
+  pass_in_one_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set color
+        id: color-selector
+        run: |
+          echo "COLOR=black" >> "$GITHUB_OUTPUT"
+      - name: Set variable
+        run: |
+          export NAME_COL=color
+      - name: Get color
+        env:
+          COLOR: ${{steps.color-selector.outputs.COLOR}}
+        run: echo "The selected color is $COLOR"
+
+        
+  producer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make a sentence
+        id: sentence_maker
+        run: |
+            echo "SENTENCE1=dark_sentence" >> "$GITHUB_OUTPUT"
+    outputs:
+      sent: ${{ steps.sentence_maker.outputs.SENTENCE1 }}
+
+  consumer:
+    runs-on: ubuntu-latest
+    needs: [producer]
+    env:
+      message: ${{needs.producer.outputs.sent}}
+    steps:
+      - name: Print the message
+        run: |
+          echo $message
+
+  job_1:
+    name: Add 3 and 7
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          expr 3 + 7 > solution.txt
+      - name: NAZWA
+        uses: actions/upload-artifact@v4
+        with:
+          name: solution_file
+          path: solution.txt
+
+  job_2:
+    name: Multiply by 9
+    needs: job_1
+    runs-on: windows-latest
+    steps:
+    - name: get artifact solution
+      uses: actions/download-artifact@v4
+      with:
+        name: solution_file
+    - shell: bash
+      run: |
+        value=`cat solution.txt`
+        echo $(expr $value \* 9) 
