@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+env:
+  cat_name: "Puszek"
+
+jobs:
+  display-variables:
+    name: test
+    runs-on: ubuntu-latest
+    env:
+      n_cat: ${{env.cat_name}}
+    steps:
+    - name: Use variables 1
+      run: |
+        echo "Repository variable : $REPO_VAR"
+        echo "Environment variable : $ENV_VAR"
+        echo "Ala ma kota o nazwie $n_cat"
+        echo "Powinna być zmienna w scopie workflow:$WORKFLOW_VAR"
+        echo "Powinna być zmienna w scopie joba:$JOB_VAR"
+        echo "Powinna być zmienna w scopie stepu:$STEP_VAR"
+    
+    - name: Use variables 1
+      run: |
+        echo "Ala ma kota o nazwie $n_cat"
+        echo "Powinna być zmienna w scopie workflow:$WORKFLOW_VAR"
+        echo "Powinna być zmienna w scopie joba:$JOB_VAR"
+        echo "NIE powinna być zmienna w scopie stepu:$STEP_VAR"
+
+  display-variables2:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Use variables in display-variables2
+      run: |
+        echo "Powinna być zmienna w scopie workflow:$WORKFLOW_VAR"
+        echo "NIE powinna być zmienna w scopie joba:$JOB_VAR"
+        echo "NIE powinna być zmienna w scopie stepu:$STEP_VAR"
