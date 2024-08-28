@@ -3,6 +3,7 @@ on:
 env:
   cat_name: "Puszek"
   WORKFLOW_VAR: "workflow1"
+  org_var: ${{org.org_var}}
 
 jobs:
   display-variables:
